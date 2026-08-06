@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký thông tin QR Tài khoản/Loa Thần Tài</title>
+    <link rel="stylesheet" href="/assets/fonts/fonts.css?v=20260718-1">
+    <script src="assets/pizzip.min.js"></script>
+    <script src="assets/docxtemplater.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(-45deg, #FF006E, #8338EC, #3A86FF, #FFBE0B, #FB5607);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow:
+                0 25px 50px rgba(0,0,0,0.25),
+                0 0 0 1px rgba(255,255,255,0.2);
+            width: 100%;
+            max-width: 560px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,0,110,0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .icon {
+            text-align: center;
+            font-size: 70px;
+            margin-bottom: 15px;
+            animation: bounce 2s ease infinite;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-10px) rotate(-5deg); }
+            75% { transform: translateY(-10px) rotate(5deg); }
+        }
+
+        h1 {
+            text-align: center;
+            color: #1a1a2e;
+            margin-bottom: 10px;
+            font-size: 26px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FF006E, #8338EC);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #1a1a2e;
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        label .required {
+            color: #FF006E;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 16px 18px;
+            border: 3px solid #e8e8e8;
+            border-radius: 16px;
+            font-size: 16px;
+            font-family: inherit;
+            background: #fafafa;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            outline: none;
+        }
+
+        textarea {
+            min-height: 96px;
+            resize: vertical;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #8338EC;
+            background: #fff;
+            box-shadow:
+                0 0 0 4px rgba(131, 56, 236, 0.15),
+                0 10px 25px rgba(131, 56, 236, 0.1);
+            transform: translateY(-2px);
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%238338EC' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            padding-right: 45px;
+        }
+
+        .button-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            position: relative;
+            z-index: 1;
+            margin-top: 6px;
+        }
+
+        button {
+            width: 100%;
+            padding: 18px;
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(255, 0, 110, 0.3);
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-3px) scale(1.01);
+        }
+
+        button:hover::before {
+            left: 100%;
+        }
+
+        button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #FF006E 0%, #8338EC 50%, #3A86FF 100%);
+            background-size: 200% 200%;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #3A86FF 0%, #00B4D8 100%);
+            box-shadow: 0 10px 30px rgba(58, 134, 255, 0.28);
+        }
+
+        .section-card {
+            display: none;
+            margin: 22px 0 12px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8fbff, #f7f2ff);
+            border: 2px dashed rgba(131, 56, 236, 0.25);
+            border-radius: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-card.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: #4b2991;
+            margin-bottom: 8px;
+        }
+
+        .section-subtitle {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 18px;
+        }
+
+        .info-text {
+            text-align: center;
+            color: #888;
+            margin-top: 18px;
+            font-size: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .privacy-notice {
+            background: linear-gradient(135deg, #fff5f7, #f0f0ff);
+            padding: 18px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            font-size: 13px;
+            color: #555;
+            border-left: 5px solid #FF006E;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .privacy-notice .lock-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .message {
+            padding: 18px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.success {
+            display: block;
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            color: #155724;
+            border: 2px solid #28a745;
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.2);
+        }
+
+        .message.error {
+            display: block;
+            background: linear-gradient(135deg, #fff5f5, #ffe0e0);
+            color: #c53030;
+            border: 2px solid #FF006E;
+            box-shadow: 0 5px 15px rgba(255, 0, 110, 0.2);
+        }
+
+        .admin-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #8338EC;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+            padding: 10px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .admin-link:hover {
+            background: rgba(131, 56, 236, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .deco {
+            position: fixed;
+            font-size: 30px;
+            opacity: 0.3;
+            pointer-events: none;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .deco:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .deco:nth-child(2) { top: 20%; right: 10%; animation-delay: 1s; }
+        .deco:nth-child(3) { bottom: 20%; left: 5%; animation-delay: 2s; }
+        .deco:nth-child(4) { bottom: 10%; right: 15%; animation-delay: 3s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            .button-row {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            .icon {
+                font-size: 55px;
+            }
+        }
+    
+
+        /* glass-refresh-orange */
+        :root{
+            --orange:#F97316;
+            --orange-dark:#C2410C;
+            --orange-light:#FB923C;
+            --orange-soft:#FFF7ED;
+            --glass-text:#2B1708;
+            --glass-muted:#8A5A32;
+            --glass-border:rgba(255,255,255,.60);
+            --glass-shadow:0 24px 70px rgba(194,65,12,.18);
+        }
+        body{
+            font-family:'Plus Jakarta Sans','Segoe UI',sans-serif;
+            background:
+                radial-gradient(circle at 12% 12%,rgba(251,146,60,.34),transparent 34%),
+                radial-gradient(circle at 88% 18%,rgba(249,115,22,.24),transparent 32%),
+                radial-gradient(circle at 50% 96%,rgba(234,88,12,.18),transparent 36%),
+                linear-gradient(135deg,#fffaf3 0%,#fff1dd 50%,#ffe8cc 100%) !important;
+            background-size:auto !important;
+            animation:none !important;
+            color:var(--glass-text);
+            overflow-x:hidden;
+        }
+        body::before, body::after{
+            content:'';
+            position:fixed;
+            border-radius:999px;
+            filter:blur(4px);
+            pointer-events:none;
+            z-index:0;
+        }
+        body::before{width:330px;height:330px;left:-110px;top:120px;background:rgba(249,115,22,.14)}
+        body::after{width:430px;height:430px;right:-160px;bottom:-90px;background:rgba(251,146,60,.20)}
+        .container{
+            background:rgba(255,255,255,.62) !important;
+            border:1px solid var(--glass-border);
+            box-shadow:var(--glass-shadow) !important;
+            backdrop-filter:blur(24px) !important;
+            -webkit-backdrop-filter:blur(24px) !important;
+            border-radius:34px !important;
+            position:relative;
+            z-index:1;
+        }
+        .container::before{
+            background:radial-gradient(circle,rgba(249,115,22,.16) 0%,transparent 70%) !important;
+        }
+        h1{
+            background:linear-gradient(120deg,var(--orange-dark),var(--orange),var(--orange-light)) !important;
+            -webkit-background-clip:text !important;
+            background-clip:text !important;
+            -webkit-text-fill-color:transparent !important;
+            letter-spacing:-.045em;
+        }
+        .subtitle{color:var(--glass-muted) !important;font-weight:600}
+        label{color:var(--glass-text) !important}
+        label .required{color:var(--orange) !important}
+        input,select,textarea{
+            background:rgba(255,255,255,.74) !important;
+            border:1.5px solid rgba(249,115,22,.18) !important;
+            border-radius:18px !important;
+            box-shadow:inset 0 1px 0 rgba(255,255,255,.75);
+        }
+        input:focus,select:focus,textarea:focus{
+            border-color:var(--orange) !important;
+            box-shadow:0 0 0 4px rgba(249,115,22,.14),0 12px 24px rgba(249,115,22,.10) !important;
+            transform:translateY(-1px) !important;
+        }
+        select{
+            background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23F97316' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
+            background-repeat:no-repeat !important;
+            background-position:right 15px center !important;
+        }
+        .section-card{
+            background:rgba(255,255,255,.46) !important;
+            border:1px solid rgba(255,255,255,.64) !important;
+            border-radius:24px !important;
+            box-shadow:0 14px 35px rgba(194,65,12,.10) !important;
+            backdrop-filter:blur(16px);
+            -webkit-backdrop-filter:blur(16px);
+        }
+        .section-title{color:var(--orange-dark) !important}
+        .btn-primary,.btn-secondary,button[type="submit"]{
+            background:linear-gradient(135deg,var(--orange),var(--orange-dark)) !important;
+            box-shadow:0 14px 30px rgba(249,115,22,.26) !important;
+            border-radius:18px !important;
+        }
+        .btn-secondary{background:linear-gradient(135deg,#FB923C,#EA580C) !important}
+        button:hover:not(:disabled){transform:translateY(-3px);box-shadow:0 18px 38px rgba(249,115,22,.30) !important}
+        .message{border-radius:18px !important;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+        .footer,.copyright{color:rgba(43,23,8,.58) !important}
+
+
+
+        /* QR camera scanner for account number */
+        .account-input-wrap { position: relative; }
+        .account-input-wrap input { padding-right: 74px !important; }
+        .qr-scan-button {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--orange), var(--orange-dark)) !important;
+            box-shadow: 0 10px 22px rgba(249,115,22,.24) !important;
+            z-index: 2;
+        }
+        .qr-scan-button svg { width: 22px; height: 22px; }
+        .qr-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.78);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+        }
+        .qr-modal.show { display: flex; }
+        .qr-modal-content {
+            width: min(94vw, 430px);
+            max-height: 92vh;
+            overflow: auto;
+            background: rgba(255,255,255,.96);
+            border: 1px solid rgba(255,255,255,.7);
+            border-radius: 26px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 26px 70px rgba(0,0,0,.28);
+        }
+        .qr-modal-content h3 { color: var(--orange-dark); margin-bottom: 8px; }
+        .qr-modal-content p { color: var(--glass-muted); font-size: 14px; margin-bottom: 14px; }
+        .qr-scanner-container { position: relative; margin: 16px 0; border-radius: 18px; overflow: hidden; background: #000; }
+        #qr-video { width: 100%; display: block; background: #000; min-height: 260px; object-fit: cover; }
+        .qr-scan-area {
+            position: absolute;
+            width: 58%;
+            aspect-ratio: 1;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            border: 3px solid #fff;
+            border-radius: 18px;
+            box-shadow: 0 0 0 999px rgba(0,0,0,.28), 0 0 18px rgba(249,115,22,.9);
+            pointer-events: none;
+        }
+        .camera-status {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            background: rgba(0,0,0,.68);
+            color: #fff;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        .qr-modal-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+        .qr-modal-actions button { padding: 14px 12px; border-radius: 14px; }
+        .feedback-modal-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 14px;
+            border-radius: 24px;
+            display: grid;
+            place-items: center;
+            font-size: 34px;
+            background: linear-gradient(135deg, #06b6d4 0%, #4f46e5 100%);
+            color: #fff;
+            box-shadow: 0 16px 32px rgba(79, 70, 229, .24);
+        }
+        .feedback-modal-icon.warning { background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%); }
+        .feedback-modal-title { text-align: center; color: var(--glass-text); margin: 0 0 10px; font-size: 22px; }
+        .feedback-modal-message { text-align: center; color: var(--glass-muted); font-size: 16px; line-height: 1.55; margin-bottom: 18px; }
+        .feedback-modal-actions { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        @media (max-width: 640px) {
+            .account-input-wrap input { padding-right: 66px !important; }
+            .qr-scan-button { width: 44px; height: 44px; right: 8px; }
+            .qr-modal-actions { grid-template-columns: 1fr; }
+        }
+
+    </style>
+<style>html,body,button,input,select,textarea{font-family:'Plus Jakarta Sans',system-ui,sans-serif}</style>
+</head>
+<body>
+    <div class="deco">✨</div>
+    <div class="deco">💎</div>
+    <div class="deco">🚀</div>
+    <div class="deco">🌟</div>
+
+    <div class="container">
+        <div class="icon">💳🔊</div>
+        <h1>Đăng ký thông tin<br>QR Tài khoản/Loa Thần Tài</h1>
+        <p class="subtitle">Nhanh chóng - Tiện lợi - An toàn</p>
+
+        <div id="message" class="message"></div>
+
+        <div class="privacy-notice">
+            <span class="lock-icon">🔒</span>
+            <span>Thông tin của bạn sẽ được bảo mật và chỉ sử dụng cho mục đích liên hệ, đăng ký và in mẫu biểu khi cần.</span>
+        </div>
+
+        <form id="registrationForm">
+            <div class="form-group">
+                <label for="loai_dang_ky">Loại đăng ký <span class="required">*</span></label>
+                <select id="loai_dang_ky" name="loai_dang_ky" required>
+                    <option value="">-- Chọn loại đăng ký --</option>
+                    <option value="QR Tài khoản">💳 QR Tài khoản</option>
+                    <option value="Loa Thần Tài">🔊 Loa Thần Tài</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="account_number">Số tài khoản <span class="required">*</span></label>
+                <div class="account-input-wrap">
+                    <input type="text" id="account_number" name="account_number" placeholder="Nhập số tài khoản hoặc quét QR..." required inputmode="text" autocomplete="off">
+                    <button type="button" id="scanAccountQRBtn" class="qr-scan-button" title="Quét mã QR tài khoản" aria-label="Quét mã QR tài khoản">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M3 7V5a2 2 0 0 1 2-2h2"></path><path d="M17 3h2a2 2 0 0 1 2 2v2"></path><path d="M21 17v2a2 2 0 0 1-2 2h-2"></path><path d="M7 21H5a2 2 0 0 1-2-2v-2"></path><path d="M7 7h3v3H7z"></path><path d="M14 7h3v3h-3z"></path><path d="M7 14h3v3H7z"></path><path d="M14 14h1"></path><path d="M17 14h0"></path><path d="M14 17h3"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Số điện thoại <span id="phoneRequiredMark" class="required">*</span></label>
+                <input type="tel" id="phone" name="phone" placeholder="Nhập số điện thoại..." required pattern="[0-9]{10,11}" title="Số điện thoại phải có 10-11 số">
+            </div>
+
+            <div class="form-group">
+                <label for="customer_name">Tên khách hàng/Tên Hộ KD/Tên Cty <span class="required">*</span></label>
+                <input type="text" id="customer_name" name="customer_name" placeholder="Nhập tên khách hàng/Tên Hộ KD/Tên Cty..." required>
+            </div>
+
+            <div class="form-group">
+                <label for="can_bo_quan_ly">Cán bộ quản lý <span class="required">*</span></label>
+                <select id="can_bo_quan_ly" name="can_bo_quan_ly" required>
+                    <option value="">-- Chọn cán bộ quản lý --</option>
+                    <option value="Đàm Thị Thu Phương">Đàm Thị Thu Phương</option>
+                    <option value="Đặng Thị Hảo">Đặng Thị Hảo</option>
+                    <option value="Đỗ Doãn Lộc">Đỗ Doãn Lộc</option>
+                    <option value="Đỗ Quang Huy">Đỗ Quang Huy</option>
+                    <option value="Đỗ Thị Ngọc Anh">Đỗ Thị Ngọc Anh</option>
+                    <option value="Đỗ Thị Trang">Đỗ Thị Trang</option>
+                    <option value="Đỗ Tuấn Anh">Đỗ Tuấn Anh</option>
+                    <option value="Đỗ Tuấn Minh">Đỗ Tuấn Minh</option>
+                    <option value="Đỗ Văn Nam">Đỗ Văn Nam</option>
+                    <option value="Doãn Thị Dịu">Doãn Thị Dịu</option>
+                    <option value="Hà Sĩ Dũng">Hà Sĩ Dũng</option>
+                    <option value="Hoàng Thị Lê">Hoàng Thị Lê</option>
+                    <option value="Hoàng Thị Minh">Hoàng Thị Minh</option>
+                    <option value="Lê Nam Phương">Lê Nam Phương</option>
+                    <option value="Lê Thanh Xuân">Lê Thanh Xuân</option>
+                    <option value="Lê Thị Diễm Quỳnh">Lê Thị Diễm Quỳnh</option>
+                    <option value="Lê Thị Giang">Lê Thị Giang</option>
+                    <option value="Lê Thị Nga">Lê Thị Nga</option>
+                    <option value="Lê Thị Oanh">Lê Thị Oanh</option>
+                    <option value="Lê Thị Uyên">Lê Thị Uyên</option>
+                    <option value="Lê Thu Phương">Lê Thu Phương</option>
+                    <option value="Lê Xuân Quý">Lê Xuân Quý</option>
+                    <option value="Lý Thị Ngọc Mai">Lý Thị Ngọc Mai</option>
+                    <option value="Mai Thị Huyền">Mai Thị Huyền</option>
+                    <option value="Mai Thị Lan Anh">Mai Thị Lan Anh</option>
+                    <option value="Nguyễn Chí Thanh">Nguyễn Chí Thanh</option>
+                    <option value="Nguyễn Diệu Linh">Nguyễn Diệu Linh</option>
+                    <option value="Nguyễn Ngọc Tú">Nguyễn Ngọc Tú</option>
+                    <option value="Nguyễn Quốc Vương Linh">Nguyễn Quốc Vương Linh</option>
+                    <option value="Nguyễn Thị Hạnh">Nguyễn Thị Hạnh</option>
+                    <option value="Nguyễn Thị Hòa">Nguyễn Thị Hòa</option>
+                    <option value="Nguyễn Thị Như Quỳnh">Nguyễn Thị Như Quỳnh</option>
+                    <option value="Nguyễn Thị Quyên">Nguyễn Thị Quyên</option>
+                    <option value="Nguyễn Trịnh Phương Thảo">Nguyễn Trịnh Phương Thảo</option>
+                    <option value="Nguyễn Văn Sơn">Nguyễn Văn Sơn</option>
+                    <option value="Phạm Văn Khoa">Phạm Văn Khoa</option>
+                    <option value="Phùng Lê Diệu Linh">Phùng Lê Diệu Linh</option>
+                    <option value="Trần Thị Hồ Lan">Trần Thị Hồ Lan</option>
+                    <option value="Trịnh Ngọc Nam">Trịnh Ngọc Nam</option>
+                    <option value="Trịnh Quang Dũng">Trịnh Quang Dũng</option>
+                    <option value="Trịnh Thị Hường">Trịnh Thị Hường</option>
+                    <option value="Vũ Xuân Trường">Vũ Xuân Trường</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="ghi_chu">Ghi chú</label>
+                <textarea id="ghi_chu" name="ghi_chu" placeholder="Nhập ghi chú nếu có..."></textarea>
+            </div>
+
+            <div id="printFields" class="section-card">
+                <div class="section-title">🖨️ Thông tin bổ sung để in mẫu biểu</div>
+                <div class="section-subtitle">Bổ sung các trường dưới đây nếu cần in mẫu biểu. Bấm <strong>Đăng ký</strong> để chỉ lưu dữ liệu hoặc <strong>Đăng ký và In mẫu</strong> để lưu kèm xuất file DOCX.</div>
+
+                <div class="form-group">
+                    <label for="ten_chu_ho">Tên chủ hộ <span class="required print-required">*</span></label>
+                    <input type="text" id="ten_chu_ho" name="ten_chu_ho" placeholder="Nhập tên chủ hộ...">
+                </div>
+
+                <div class="form-group">
+                    <label for="so_cccd">Số CCCD <span class="required print-required">*</span></label>
+                    <input type="text" id="so_cccd" name="so_cccd" placeholder="Nhập số CCCD..." inputmode="numeric" pattern="[0-9]{9,12}" title="CCCD gồm 9-12 chữ số">
+                </div>
+
+                <div class="form-group">
+                    <label for="ngay_cap">Ngày cấp <span class="required print-required">*</span></label>
+                    <input type="date" id="ngay_cap" name="ngay_cap">
+                </div>
+
+                <div class="form-group">
+                    <label for="noi_cap">Nơi cấp <span class="required print-required">*</span></label>
+                    <select id="noi_cap" name="noi_cap">
+                        <option value="">-- Chọn nơi cấp --</option>
+                        <option value="Cục CS QLHC về TTXH">Cục CS QLHC về TTXH</option>
+                        <option value="Bộ Công An">Bộ Công An</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="dia_chi">Địa chỉ <span class="required print-required">*</span></label>
+                    <textarea id="dia_chi" name="dia_chi" placeholder="Nhập địa chỉ..."></textarea>
+                </div>
+            </div>
+
+            <div class="button-row">
+                <button type="submit" id="submitBtn" class="btn-primary">🚀 Đăng ký</button>
+                <button type="submit" id="printSubmitBtn" class="btn-secondary">🖨️ Đăng ký và In mẫu</button>
+            </div>
+        </form>
+
+        <p class="info-text">✨ Khi chọn <strong>Loa Thần Tài</strong>, hệ thống tự mở phần thông tin bổ sung. Chọn <strong>Đăng ký</strong> để chỉ lưu hoặc <strong>Đăng ký và In mẫu</strong> để lưu kèm xuất DOCX.</p>
+
+        <a href="admin.html" class="admin-link">🔐 Quản lý dữ liệu</a>
+    </div>
+
+
+
+    <div id="feedbackModal" class="qr-modal" aria-hidden="true">
+        <div class="qr-modal-content">
+            <div id="feedbackModalIcon" class="feedback-modal-icon">✅</div>
+            <h3 id="feedbackModalTitle" class="feedback-modal-title">Thông báo</h3>
+            <div id="feedbackModalMessage" class="feedback-modal-message"></div>
+            <div class="feedback-modal-actions">
+                <button type="button" id="closeFeedbackModal" class="btn-primary">Đã hiểu</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="accountQRModal" class="qr-modal" aria-hidden="true">
+        <div class="qr-modal-content">
+            <h3>Quét mã QR tài khoản</h3>
+            <p>Hướng camera vào mã VietQR/QR tài khoản để tự động điền số tài khoản. Vẫn có thể nhập tay tự do.</p>
+            <div class="qr-scanner-container">
+                <video id="qr-video" playsinline muted></video>
+                <div class="qr-scan-area"></div>
+                <div id="cameraStatus" class="camera-status">Đang khởi động camera...</div>
+            </div>
+            <div class="qr-modal-actions">
+                <button type="button" id="closeAccountQRScanner" class="btn-secondary">Đóng</button>
+                <button type="button" id="switchAccountQRCamera" class="btn-primary">Đổi camera</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dữ liệu hiện lưu/tra cứu qua PostgreSQL nội bộ: /api/regis-records
+        const DATA_API = '/api/regis-records';
+
+        const DOCX_TEMPLATE_URL = 'templates/mau_bieu.docx';
+        const PRINT_ENABLED_SERVICE = 'Loa Thần Tài';
+        let printMode = false;
+
+        const messageDiv = document.getElementById('message');
+        const printFields = document.getElementById('printFields');
+        const printSubmitBtn = document.getElementById('printSubmitBtn');
+        const submitBtn = document.getElementById('submitBtn');
+
+        function showMessage(type, html) {
+            messageDiv.className = `message ${type}`;
+            messageDiv.innerHTML = html;
+        }
+
+        function clearMessage() {
+            messageDiv.className = 'message';
+            messageDiv.innerHTML = '';
+            messageDiv.style.display = 'none';
+        }
+
+        function showFeedbackModal(type, title, html) {
+            const modal = document.getElementById('feedbackModal');
+            const icon = document.getElementById('feedbackModalIcon');
+            document.getElementById('feedbackModalTitle').textContent = title;
+            document.getElementById('feedbackModalMessage').innerHTML = html;
+            icon.className = `feedback-modal-icon ${type === 'warning' ? 'warning' : ''}`;
+            icon.textContent = type === 'warning' ? '⚠️' : '✅';
+            modal.classList.add('show');
+            modal.setAttribute('aria-hidden', 'false');
+        }
+
+        function closeFeedbackModal() {
+            const modal = document.getElementById('feedbackModal');
+            modal.classList.remove('show');
+            modal.setAttribute('aria-hidden', 'true');
+        }
+
+        function normalizeSpaces(value) {
+            return value.trim().replace(/\s+/g, ' ');
+        }
+
+        function digitsOnly(value) {
+            return value.replace(/\D/g, '');
+        }
+
+        function formatDateForDoc(dateValue) {
+            if (!dateValue) return '';
+            const [y, m, d] = dateValue.split('-');
+            return `${d}/${m}/${y}`;
+        }
+
+        function fillerIfBlank(value) {
+            const normalized = normalizeSpaces(String(value || ''));
+            return normalized || '………..';
+        }
+
+        function getNowParts() {
+            const now = new Date();
+            return {
+                ngay_dang_ky: now.toLocaleDateString('vi-VN'),
+                gio_dang_ky: now.toLocaleTimeString('vi-VN')
+            };
+        }
+
+        function isLoaThanTaiSelected() {
+            return document.getElementById('loai_dang_ky').value === PRINT_ENABLED_SERVICE;
+        }
+
+        function syncPhoneRequirement() {
+            const isQrAccount = document.getElementById('loai_dang_ky').value === 'QR Tài khoản';
+            const phoneInput = document.getElementById('phone');
+            const requiredMark = document.getElementById('phoneRequiredMark');
+            phoneInput.required = !isQrAccount;
+            requiredMark.style.display = isQrAccount ? 'none' : '';
+            phoneInput.placeholder = isQrAccount ? 'Không bắt buộc khi in mã QR tài khoản...' : 'Nhập số điện thoại...';
+        }
+
+        function clearPrintFields() {
+            ['ten_chu_ho', 'so_cccd', 'ngay_cap', 'noi_cap', 'dia_chi'].forEach(id => {
+                document.getElementById(id).value = '';
+            });
+        }
+
+        function syncPrintButtonState() {
+            const enabledByService = isLoaThanTaiSelected();
+            printSubmitBtn.disabled = !enabledByService;
+            printSubmitBtn.style.opacity = enabledByService ? '1' : '0.55';
+            printSubmitBtn.title = enabledByService ? 'Lưu dữ liệu và xuất mẫu biểu DOCX' : 'Chỉ dùng khi chọn loại đăng ký là Loa Thần Tài';
+            updatePrintFieldsVisibility(enabledByService, { preserveValues: enabledByService });
+            syncPhoneRequirement();
+        }
+
+        function updatePrintFieldsVisibility(show, options = {}) {
+            const { preserveValues = false } = options;
+            printFields.classList.toggle('show', show);
+
+            // Chỉ bắt buộc nhập các trường bổ sung khi người dùng bấm "Đăng ký và In mẫu".
+            ['ten_chu_ho', 'so_cccd', 'ngay_cap', 'noi_cap', 'dia_chi'].forEach(id => {
+                document.getElementById(id).required = false;
+            });
+
+            if (!show && !preserveValues) {
+                clearPrintFields();
+            }
+        }
+
+
+
+        // ==================== QR CAMERA SCANNER: điền số tài khoản ====================
+        let accountQRStream = null;
+        let accountQRScanning = false;
+        let accountQRFacingMode = 'environment';
+
+        function setAccountValueFromQR(value) {
+            const accountInput = document.getElementById('account_number');
+            accountInput.value = value || '';
+            accountInput.dispatchEvent(new Event('input', { bubbles: true }));
+            accountInput.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+
+        function extractAccountNameFromQR(qrData) {
+            const namePattern = /59(\d{2})([A-Za-zÀ-ỹ\s]+?)(?=60|63|$)/;
+            const nameMatch = qrData.match(namePattern);
+            if (nameMatch) {
+                const nameLength = parseInt(nameMatch[1], 10);
+                const potentialName = nameMatch[2];
+                if (!isNaN(nameLength) && potentialName.length >= nameLength) {
+                    return potentialName.substring(0, nameLength).trim();
+                }
+            }
+            return null;
+        }
+
+        function extractAccountInfoFromVietQR(qrData) {
+            if (!qrData) return { accountNumber: null, accountName: null };
+            const raw = String(qrData).trim();
+            const endMarkerIndex = raw.indexOf('0208QR');
+            if (endMarkerIndex > 48) {
+                return {
+                    accountNumber: raw.substring(48, endMarkerIndex).trim(),
+                    accountName: extractAccountNameFromQR(raw)
+                };
+            }
+            const url = raw.match(/(?:accountNo|account|acc|stk|so_tai_khoan)=([^&\s]+)/i);
+            if (url) return { accountNumber: decodeURIComponent(url[1]).trim(), accountName: null };
+            const labelled = raw.match(/(?:STK|Số tài khoản|So tai khoan|ACCOUNT)\s*[:\-]?\s*([A-Za-z0-9_.\-]+)/i);
+            if (labelled) return { accountNumber: labelled[1].trim(), accountName: null };
+            const longToken = raw.match(/[A-Za-z0-9_.\-]{6,32}/);
+            return { accountNumber: longToken ? longToken[0].trim() : null, accountName: null };
+        }
+
+        async function startAccountQRScanner() {
+            if (!window.jsQR) {
+                showMessage('error', '❌ Chưa tải được thư viện quét QR. Vui lòng tải lại trang rồi thử lại.');
+                return;
+            }
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                showMessage('error', '❌ Trình duyệt không hỗ trợ camera hoặc trang chưa chạy ở môi trường cho phép camera.');
+                return;
+            }
+            const modal = document.getElementById('accountQRModal');
+            const video = document.getElementById('qr-video');
+            const status = document.getElementById('cameraStatus');
+            try {
+                stopAccountQRScanner(false);
+                modal.classList.add('show');
+                modal.setAttribute('aria-hidden', 'false');
+                status.textContent = 'Đang khởi động camera...';
+                accountQRStream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        facingMode: accountQRFacingMode,
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    },
+                    audio: false
+                });
+                video.srcObject = accountQRStream;
+                await video.play();
+                status.textContent = `Camera ${accountQRFacingMode === 'environment' ? 'sau' : 'trước'} - Đang quét...`;
+                accountQRScanning = true;
+                scanAccountQRCodeFrame();
+            } catch (err) {
+                console.error('Lỗi camera QR:', err);
+                showMessage('error', `❌ Không mở được camera: ${err.message}`);
+                stopAccountQRScanner();
+            }
+        }
+
+        function stopAccountQRScanner(hideModal = true) {
+            accountQRScanning = false;
+            if (accountQRStream) {
+                accountQRStream.getTracks().forEach(track => track.stop());
+                accountQRStream = null;
+            }
+            const video = document.getElementById('qr-video');
+            if (video && video.srcObject) video.srcObject = null;
+            if (hideModal) {
+                const modal = document.getElementById('accountQRModal');
+                modal.classList.remove('show');
+                modal.setAttribute('aria-hidden', 'true');
+            }
+        }
+
+        function scanAccountQRCodeFrame() {
+            const video = document.getElementById('qr-video');
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d', { willReadFrequently: true });
+            const tick = () => {
+                if (!accountQRScanning) return;
+                if (video.readyState === video.HAVE_ENOUGH_DATA && video.videoWidth > 0) {
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    try {
+                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                        const code = jsQR(imageData.data, imageData.width, imageData.height);
+                        if (code && code.data) {
+                            const info = extractAccountInfoFromVietQR(code.data);
+                            if (info.accountNumber) {
+                                setAccountValueFromQR(info.accountNumber);
+                                stopAccountQRScanner();
+                                showMessage('success', `✅ Đã quét và điền số tài khoản: <strong>${info.accountNumber}</strong>`);
+                                return;
+                            }
+                            document.getElementById('cameraStatus').textContent = 'Đã thấy QR nhưng chưa đọc được số tài khoản...';
+                        }
+                    } catch (err) {
+                        console.warn('Lỗi đọc khung hình QR:', err);
+                    }
+                }
+                requestAnimationFrame(tick);
+            };
+            requestAnimationFrame(tick);
+        }
+
+        function switchAccountQRCamera() {
+            accountQRFacingMode = accountQRFacingMode === 'environment' ? 'user' : 'environment';
+            stopAccountQRScanner(false);
+            setTimeout(startAccountQRScanner, 250);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedStaff = localStorage.getItem('can_bo_quan_ly');
+            if (savedStaff) {
+                const select = document.getElementById('can_bo_quan_ly');
+                for (let i = 0; i < select.options.length; i++) {
+                    if (select.options[i].value === savedStaff) {
+                        select.value = savedStaff;
+                        break;
+                    }
+                }
+            }
+
+            syncPrintButtonState();
+            document.getElementById('scanAccountQRBtn').addEventListener('click', startAccountQRScanner);
+            document.getElementById('closeAccountQRScanner').addEventListener('click', () => stopAccountQRScanner());
+            document.getElementById('switchAccountQRCamera').addEventListener('click', switchAccountQRCamera);
+            document.getElementById('accountQRModal').addEventListener('click', (e) => { if (e.target.id === 'accountQRModal') stopAccountQRScanner(); });
+            document.getElementById('closeFeedbackModal').addEventListener('click', closeFeedbackModal);
+            document.getElementById('feedbackModal').addEventListener('click', (e) => { if (e.target.id === 'feedbackModal') closeFeedbackModal(); });
+            window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeFeedbackModal(); });
+            window.addEventListener('beforeunload', () => stopAccountQRScanner(false));
+            document.getElementById('loai_dang_ky').addEventListener('change', function() {
+                syncPrintButtonState();
+                if (isLoaThanTaiSelected()) {
+                    clearMessage();
+                }
+            });
+        });
+
+        async function exportDocx(data) {
+            const response = await fetch(DOCX_TEMPLATE_URL);
+            if (!response.ok) {
+                throw new Error('Không đọc được template DOCX. Hãy thêm file templates/mau_bieu.docx vào repo.');
+            }
+
+            const buffer = await response.arrayBuffer();
+            const zip = new PizZip(buffer);
+            const doc = new window.docxtemplater(zip, {
+                paragraphLoop: true,
+                linebreaks: true
+            });
+
+            doc.render(data);
+            const blob = doc.getZip().generate({
+                type: 'blob',
+                mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+            });
+
+            const fileName = `Mau_bieu_${(data.customer_name || 'khach-hang').replace(/[^\p{L}\p{N}]+/gu, '_')}_${Date.now()}.docx`;
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+        }
+
+        document.getElementById('registrationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            clearMessage();
+            printMode = e.submitter && e.submitter.id === 'printSubmitBtn';
+
+            // Removed old Airtable config check - now using PostgreSQL
+
+            const formValues = {
+                loai_dang_ky: document.getElementById('loai_dang_ky').value,
+                account_number: normalizeSpaces(document.getElementById('account_number').value),
+                phone: digitsOnly(document.getElementById('phone').value),
+                customer_name: normalizeSpaces(document.getElementById('customer_name').value),
+                can_bo_quan_ly: document.getElementById('can_bo_quan_ly').value,
+                ghi_chu: normalizeSpaces(document.getElementById('ghi_chu').value || ''),
+                ten_chu_ho: normalizeSpaces(document.getElementById('ten_chu_ho').value || ''),
+                so_cccd: digitsOnly(document.getElementById('so_cccd').value || ''),
+                ngay_cap: document.getElementById('ngay_cap').value,
+                noi_cap: normalizeSpaces(document.getElementById('noi_cap').value || ''),
+                dia_chi: normalizeSpaces(document.getElementById('dia_chi').value || '')
+            };
+
+            if (printMode && !isLoaThanTaiSelected()) {
+                showMessage('error', '⚠️ Chức năng in mẫu biểu chỉ áp dụng cho đăng ký <strong>Loa Thần Tài</strong>.');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            printSubmitBtn.disabled = true;
+            if (printMode) {
+                printSubmitBtn.textContent = '💾 Đang lưu & xuất mẫu...';
+            } else {
+                submitBtn.textContent = '💾 Đang lưu...';
+            }
+
+            try {
+                if (formValues.loai_dang_ky !== 'QR Tài khoản') {
+                    const checkParams = new URLSearchParams({
+                        account_number: formValues.account_number,
+                        loai_dang_ky: formValues.loai_dang_ky
+                    });
+                    const checkResponse = await fetch(`${DATA_API}/check?${checkParams.toString()}`);
+
+                    if (!checkResponse.ok) throw new Error('Không thể kiểm tra dữ liệu PostgreSQL');
+
+                    const checkData = await checkResponse.json();
+                    if (checkData.records.length > 0) {
+                        showFeedbackModal(
+                            'warning',
+                            'Tài khoản đã đăng ký Loa Thần Tài',
+                            `Tài khoản <strong>${formValues.account_number}</strong> đã đăng ký <strong>Loa Thần Tài</strong>.`
+                        );
+                        return;
+                    }
+                }
+
+                const payload = {
+                    fields: {
+                        'Loại đăng ký': formValues.loai_dang_ky,
+                        'Số tài khoản': formValues.account_number,
+                        'Số điện thoại': formValues.phone,
+                        'Tên khách hàng': formValues.customer_name,
+                        'Cán bộ quản lý': formValues.can_bo_quan_ly,
+                        'Ghi chú': formValues.ghi_chu,
+                        'Tên chủ hộ': formValues.ten_chu_ho,
+                        'Số CCCD': formValues.so_cccd,
+                        'Ngày cấp': formValues.ngay_cap || '',
+                        'Nơi cấp': formValues.noi_cap,
+                        'Địa chỉ': formValues.dia_chi,
+                        'Yêu cầu in mẫu biểu': printMode ? 'Có' : 'Không'
+                    }
+                };
+
+                const response = await fetch(DATA_API, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    const errorMessage = errorData?.error?.message || 'Không thể lưu dữ liệu';
+                    if (response.status === 409 && formValues.loai_dang_ky === PRINT_ENABLED_SERVICE) {
+                        showFeedbackModal(
+                            'warning',
+                            'Tài khoản đã đăng ký Loa Thần Tài',
+                            `Tài khoản <strong>${formValues.account_number}</strong> đã đăng ký <strong>Loa Thần Tài</strong>.`
+                        );
+                        return;
+                    }
+                    throw new Error(errorMessage);
+                }
+
+                localStorage.setItem('can_bo_quan_ly', formValues.can_bo_quan_ly);
+
+                if (printMode) {
+                    const nowParts = getNowParts();
+                    await exportDocx({
+                        ...formValues,
+                        ten_chu_ho: fillerIfBlank(formValues.ten_chu_ho),
+                        so_cccd: fillerIfBlank(formValues.so_cccd),
+                        ngay_cap: fillerIfBlank(formatDateForDoc(formValues.ngay_cap)),
+                        noi_cap: fillerIfBlank(formValues.noi_cap),
+                        dia_chi: fillerIfBlank(formValues.dia_chi),
+                        ...nowParts
+                    });
+                }
+
+                showFeedbackModal(
+                    'success',
+                    'Đăng ký thành công',
+                    printMode
+                        ? 'Thông tin đã được lưu và hệ thống đã xuất mẫu biểu DOCX.'
+                        : 'Thông tin đăng ký đã được lưu thành công.'
+                );
+
+                const savedStaff = formValues.can_bo_quan_ly;
+                document.getElementById('registrationForm').reset();
+                document.getElementById('can_bo_quan_ly').value = savedStaff;
+                printMode = false;
+                updatePrintFieldsVisibility(false, { preserveValues: false });
+                syncPrintButtonState();
+                document.querySelector('.button-row').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } catch (error) {
+                showMessage('error', `❌ ${error.message}`);
+                console.error(error);
+            } finally {
+                submitBtn.disabled = false;
+                printSubmitBtn.disabled = !isLoaThanTaiSelected();
+                submitBtn.textContent = '🚀 Đăng ký';
+                printSubmitBtn.textContent = '🖨️ Đăng ký và In mẫu';
+            }
+        });
+    </script>
+</body>
+</html>
