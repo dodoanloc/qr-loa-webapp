@@ -16,3 +16,10 @@ data/
 *.sqlite3
 *.db
 .database_url
+
+*.db-*
+*.sqlite*
+*.bak*
+*.env*
+data/*.db
+deploy/*.env*
